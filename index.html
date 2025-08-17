@@ -7,9 +7,13 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
         
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
             background: linear-gradient(180deg, #ff006e 0%, #8338ec 50%, #3a86ff 100%);
             font-family: 'Orbitron', monospace;
             display: flex;
@@ -26,16 +30,17 @@
         .game-container {
             position: relative;
             width: min(800px, 95vw);
-            height: min(600px, 95vh);
-            background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            height: min(600px, 90vh);
+            background: #0f0f23;
             border: 3px solid #ff00ff;
-            box-shadow: 0 0 30px #ff00ff, inset 0 0 50px rgba(255, 0, 255, 0.1);
+            box-shadow: 0 0 30px #ff00ff;
             overflow: hidden;
         }
         
         #gameCanvas {
+            width: 100%;
+            height: 100%;
             display: block;
-            background: linear-gradient(180deg, #0f0f23 0%, #16213e 100%);
         }
         
         .ui-overlay {
@@ -74,7 +79,7 @@
             left: 50%;
             transform: translateX(-50%);
             color: #00ff41;
-            font-size: 14px;
+            font-size: 12px;
             text-align: center;
             text-shadow: 0 0 5px #00ff41;
         }
@@ -114,73 +119,12 @@
         
         .d-pad-button:active {
             background: rgba(255, 0, 255, 0.6);
-            transform: scale(0.95);
         }
         
         .d-pad-up { top: 0; left: 40px; }
         .d-pad-down { bottom: 0; left: 40px; }
         .d-pad-left { top: 40px; left: 0; }
         .d-pad-right { top: 40px; right: 0; }
-        
-        @media (max-width: 768px) {
-            .controls {
-                display: none;
-            }
-            
-            .mobile-controls {
-                display: block;
-            }
-            
-            .score, .lives {
-                font-size: 18px;
-            }
-            
-            .title {
-                font-size: 32px;
-            }
-        }
-        
-        .game-over {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #ff00ff;
-            padding: 40px;
-            text-align: center;
-            color: #00ffff;
-            box-shadow: 0 0 30px #ff00ff;
-            display: none;
-            pointer-events: all;
-        }
-        
-        .game-over h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #ff1493;
-            text-shadow: 0 0 15px #ff1493;
-        }
-        
-        .restart-btn {
-            background: linear-gradient(45deg, #ff00ff, #00ffff);
-            border: none;
-            color: #000;
-            padding: 15px 30px;
-            font-family: 'Orbitron', monospace;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-        }
-        
-        .restart-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
-        }
         
         .title-screen {
             position: absolute;
@@ -208,7 +152,7 @@
         
         @keyframes neon-flicker {
             0%, 18%, 22%, 25%, 53%, 57%, 100% {
-                text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff;
+                text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff;
             }
             20%, 24%, 55% {
                 text-shadow: none;
@@ -226,26 +170,70 @@
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 3px;
-            transition: all 0.3s;
             margin-top: 30px;
         }
         
-        .start-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 25px rgba(255, 20, 147, 0.8);
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ff00ff;
+            padding: 40px;
+            text-align: center;
+            color: #00ffff;
+            box-shadow: 0 0 30px #ff00ff;
+            display: none;
+            pointer-events: all;
+            z-index: 20;
+        }
+        
+        .game-over h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #ff1493;
+            text-shadow: 0 0 15px #ff1493;
+        }
+        
+        .restart-btn {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            border: none;
+            color: #000;
+            padding: 15px 30px;
+            font-family: 'Orbitron', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                display: none;
+            }
+            
+            .mobile-controls {
+                display: block;
+            }
+            
+            .title {
+                font-size: 32px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <canvas id="gameCanvas"></canvas>
         
         <div class="ui-overlay">
             <div class="score">SCORE: <span id="scoreValue">0</span></div>
             <div class="lives">LIVES: <span id="livesValue">3</span></div>
             <div class="controls">
-                WASD or Arrow Keys to Move<br>
-                Cross the neon highways without getting hit!
+                WASD or Arrow Keys • Cross the neon highways!
             </div>
             <div class="mobile-controls">
                 <div class="d-pad">
@@ -270,9 +258,6 @@
             <div style="font-size: 18px; margin-bottom: 10px;">
                 Final Score: <span id="finalScore">0</span>
             </div>
-            <div style="font-size: 14px; color: #888; margin-bottom: 20px;">
-                You crossed <span id="finalDistance">0</span> lanes
-            </div>
             <button class="restart-btn" onclick="restartGame()">PLAY AGAIN</button>
         </div>
     </div>
@@ -281,23 +266,11 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         
-        // Responsive canvas sizing
-        function resizeCanvas() {
-            const container = document.querySelector('.game-container');
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
-        }
-        
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-        
-        // Game state
         let gameRunning = false;
         let score = 0;
         let lives = 3;
         let gameSpeed = 2;
         
-        // Player (responsive positioning)
         const player = {
             x: 0,
             y: 0,
@@ -307,143 +280,120 @@
             color: '#ff1493'
         };
         
-        function resetPlayerPosition() {
+        let cars = [];
+        let lanes = [];
+        
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            
+            // Reset player position
             player.x = canvas.width / 2 - player.width / 2;
             player.y = canvas.height - 50;
+            
+            // Recreate lanes
+            createLanes();
+            
+            if (!gameRunning) {
+                draw();
+            }
         }
-        
-        resetPlayerPosition();
-        
-        // Cars array
-        let cars = [];
-        
-        // Lanes configuration (responsive)
-        let lanes = [];
         
         function createLanes() {
             lanes = [];
-            const laneHeight = canvas.height / 12;
+            const laneCount = 10;
+            const laneSpacing = (canvas.height - 100) / laneCount;
             const colors = ['#ff00ff', '#00ffff', '#ff1493', '#00ff41', '#ffff00', '#ff6600', '#9d00ff', '#ff0080', '#00ff80', '#8000ff'];
             
-            for (let i = 1; i <= 10; i++) {
+            for (let i = 0; i < laneCount; i++) {
                 lanes.push({
-                    y: canvas.height - (laneHeight * (i + 1)),
-                    direction: i % 2 === 0 ? -1 : 1,
-                    speed: 1.5 + Math.random() * 1.5,
-                    color: colors[i - 1]
+                    y: canvas.height - 80 - (i * laneSpacing),
+                    direction: i % 2 === 0 ? 1 : -1,
+                    speed: 1.5 + Math.random() * 2,
+                    color: colors[i % colors.length]
                 });
             }
         }
         
         // Input handling
         const keys = {};
-        let touchActive = false;
         
-        // Keyboard events (Mac/Windows/Linux compatible)
         window.addEventListener('keydown', (e) => {
             e.preventDefault();
             keys[e.key.toLowerCase()] = true;
-            keys[e.code] = true;
+            keys[e.code.toLowerCase()] = true;
         });
         
         window.addEventListener('keyup', (e) => {
             e.preventDefault();
             keys[e.key.toLowerCase()] = false;
-            keys[e.code] = false;
+            keys[e.code.toLowerCase()] = false;
         });
         
-        // Mobile touch controls
+        // Mobile controls
         document.querySelectorAll('.d-pad-button').forEach(button => {
-            // Touch events for mobile
             button.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                const direction = button.getAttribute('data-direction');
-                keys[direction] = true;
-                touchActive = true;
+                keys[button.getAttribute('data-direction')] = true;
             });
             
             button.addEventListener('touchend', (e) => {
                 e.preventDefault();
-                const direction = button.getAttribute('data-direction');
-                keys[direction] = false;
-                touchActive = false;
+                keys[button.getAttribute('data-direction')] = false;
             });
             
-            // Mouse events for desktop testing
             button.addEventListener('mousedown', (e) => {
                 e.preventDefault();
-                const direction = button.getAttribute('data-direction');
-                keys[direction] = true;
+                keys[button.getAttribute('data-direction')] = true;
             });
             
             button.addEventListener('mouseup', (e) => {
                 e.preventDefault();
-                const direction = button.getAttribute('data-direction');
-                keys[direction] = false;
-            });
-            
-            button.addEventListener('mouseleave', (e) => {
-                const direction = button.getAttribute('data-direction');
-                keys[direction] = false;
+                keys[button.getAttribute('data-direction')] = false;
             });
         });
         
-        // Prevent scrolling on mobile
-        document.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-        }, { passive: false });
-        
         function createCar(lane) {
-            const car = {
+            return {
                 x: lane.direction > 0 ? -60 : canvas.width + 10,
-                y: lane.y,
-                width: Math.min(50, canvas.width * 0.08),
-                height: Math.min(25, canvas.height * 0.04),
+                y: lane.y - 12,
+                width: 50,
+                height: 24,
                 speed: lane.speed * lane.direction * gameSpeed,
-                color: lane.color,
-                trail: []
+                color: lane.color
             };
-            return car;
-        }
-        
-        function spawnCars() {
-            lanes.forEach((lane, index) => {
-                if (Math.random() < 0.015 + (gameSpeed - 2) * 0.005) {
-                    cars.push(createCar(lane));
-                }
-            });
         }
         
         function updatePlayer() {
-            const speed = Math.min(player.speed, canvas.width * 0.01);
+            const speed = player.speed;
             
-            // Movement with WASD, arrow keys, and mobile controls
-            if (keys['a'] || keys['arrowleft'] || keys['ArrowLeft'] || keys['left']) {
+            if (keys['a'] || keys['arrowleft'] || keys['left']) {
                 player.x = Math.max(10, player.x - speed);
             }
-            if (keys['d'] || keys['arrowright'] || keys['ArrowRight'] || keys['right']) {
+            if (keys['d'] || keys['arrowright'] || keys['right']) {
                 player.x = Math.min(canvas.width - player.width - 10, player.x + speed);
             }
-            if (keys['w'] || keys['arrowup'] || keys['ArrowUp'] || keys['up']) {
+            if (keys['w'] || keys['arrowup'] || keys['up']) {
                 player.y = Math.max(10, player.y - speed);
             }
-            if (keys['s'] || keys['arrowdown'] || keys['ArrowDown'] || keys['down']) {
+            if (keys['s'] || keys['arrowdown'] || keys['down']) {
                 player.y = Math.min(canvas.height - player.height - 10, player.y + speed);
             }
         }
         
         function updateCars() {
-            cars.forEach((car, index) => {
-                // Add trail point
-                car.trail.push({ x: car.x + car.width/2, y: car.y + car.height/2 });
-                if (car.trail.length > 8) car.trail.shift();
-                
-                car.x += car.speed;
-                
-                // Remove cars that are off screen
-                if (car.x < -100 || car.x > canvas.width + 50) {
-                    cars.splice(index, 1);
+            // Spawn cars
+            lanes.forEach(lane => {
+                if (Math.random() < 0.02) {
+                    cars.push(createCar(lane));
                 }
+            });
+            
+            // Update car positions
+            cars = cars.filter(car => {
+                car.x += car.speed;
+                return car.x > -100 && car.x < canvas.width + 50;
             });
         }
         
@@ -457,8 +407,9 @@
                     lives--;
                     document.getElementById('livesValue').textContent = lives;
                     
-                    // Reset player position
-                    resetPlayerPosition();
+                    // Reset player
+                    player.x = canvas.width / 2 - player.width / 2;
+                    player.y = canvas.height - 50;
                     
                     if (lives <= 0) {
                         gameOver();
@@ -468,34 +419,31 @@
         }
         
         function updateScore() {
-            // Score based on how far forward the player has moved
-            const forwardProgress = (canvas.height - 50 - player.y) / 10;
-            const newScore = Math.max(score, Math.floor(forwardProgress));
-            
+            const newScore = Math.max(score, Math.floor((canvas.height - 50 - player.y) / 5));
             if (newScore > score) {
                 score = newScore;
                 document.getElementById('scoreValue').textContent = score;
-                
-                // Increase game speed gradually
                 gameSpeed = 2 + (score / 100);
             }
         }
         
-        function drawBackground() {
-            // Gradient background
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = 'linear-gradient(180deg, #0f0f23 0%, #16213e 100%)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Background gradient
             const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
             gradient.addColorStop(0, '#0f0f23');
             gradient.addColorStop(0.5, '#16213e');
             gradient.addColorStop(1, '#0f3460');
-            
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Draw grid lines for retro effect
+            // Grid
             ctx.strokeStyle = 'rgba(255, 0, 255, 0.1)';
             ctx.lineWidth = 1;
             
-            // Horizontal lines
             for (let i = 0; i < canvas.height; i += 20) {
                 ctx.beginPath();
                 ctx.moveTo(0, i);
@@ -503,123 +451,63 @@
                 ctx.stroke();
             }
             
-            // Vertical lines
-            for (let i = 0; i < canvas.width; i += 40) {
-                ctx.beginPath();
-                ctx.moveTo(i, 0);
-                ctx.lineTo(i, canvas.height);
-                ctx.stroke();
-            }
-        }
-        
-        function drawLanes() {
+            // Lanes
             lanes.forEach(lane => {
-                const laneHeight = 30;
+                ctx.fillStyle = `${lane.color}20`;
+                ctx.fillRect(0, lane.y - 15, canvas.width, 30);
                 
-                // Lane background
-                ctx.fillStyle = `rgba(${lane.color.slice(1).match(/.{2}/g).map(x => parseInt(x, 16)).join(',')}, 0.1)`;
-                ctx.fillRect(0, lane.y - laneHeight/2, canvas.width, laneHeight);
-                
-                // Lane divider lines
                 ctx.strokeStyle = lane.color;
                 ctx.lineWidth = 2;
                 ctx.setLineDash([10, 10]);
-                
                 ctx.beginPath();
-                ctx.moveTo(0, lane.y - laneHeight/2);
-                ctx.lineTo(canvas.width, lane.y - laneHeight/2);
+                ctx.moveTo(0, lane.y - 15);
+                ctx.lineTo(canvas.width, lane.y - 15);
                 ctx.stroke();
-                
                 ctx.beginPath();
-                ctx.moveTo(0, lane.y + laneHeight/2);
-                ctx.lineTo(canvas.width, lane.y + laneHeight/2);
+                ctx.moveTo(0, lane.y + 15);
+                ctx.lineTo(canvas.width, lane.y + 15);
                 ctx.stroke();
-                
                 ctx.setLineDash([]);
             });
-        }
-        
-        function drawPlayer() {
-            ctx.save();
             
-            // Player glow
-            ctx.shadowColor = player.color;
-            ctx.shadowBlur = 15;
-            
-            // Player body
-            ctx.fillStyle = player.color;
-            ctx.fillRect(player.x, player.y, player.width, player.height);
-            
-            // Player highlight
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(player.x + 2, player.y + 2, player.width - 4, 4);
-            
-            ctx.restore();
-        }
-        
-        function drawCars() {
+            // Cars
             cars.forEach(car => {
-                ctx.save();
-                
-                // Car trail
-                ctx.strokeStyle = car.color;
-                ctx.lineWidth = 3;
-                ctx.globalAlpha = 0.6;
-                
-                if (car.trail.length > 1) {
-                    ctx.beginPath();
-                    ctx.moveTo(car.trail[0].x, car.trail[0].y);
-                    for (let i = 1; i < car.trail.length; i++) {
-                        ctx.globalAlpha = (i / car.trail.length) * 0.6;
-                        ctx.lineTo(car.trail[i].x, car.trail[i].y);
-                    }
-                    ctx.stroke();
-                }
-                
-                ctx.globalAlpha = 1;
-                
-                // Car glow
+                ctx.fillStyle = car.color;
                 ctx.shadowColor = car.color;
                 ctx.shadowBlur = 10;
-                
-                // Car body
-                ctx.fillStyle = car.color;
                 ctx.fillRect(car.x, car.y, car.width, car.height);
+                ctx.shadowBlur = 0;
                 
                 // Car highlights
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(car.x + 5, car.y + 2, car.width - 10, 3);
-                ctx.fillRect(car.x + 5, car.y + car.height - 5, car.width - 10, 3);
-                
-                ctx.restore();
             });
+            
+            // Player
+            ctx.fillStyle = player.color;
+            ctx.shadowColor = player.color;
+            ctx.shadowBlur = 15;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            ctx.shadowBlur = 0;
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(player.x + 2, player.y + 2, player.width - 4, 4);
         }
         
         function gameLoop() {
             if (!gameRunning) return;
             
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            drawBackground();
-            drawLanes();
-            
             updatePlayer();
             updateCars();
-            spawnCars();
             checkCollisions();
             updateScore();
-            
-            drawCars();
-            drawPlayer();
+            draw();
             
             requestAnimationFrame(gameLoop);
         }
         
         function startGame() {
             document.getElementById('titleScreen').style.display = 'none';
-            resizeCanvas();
-            createLanes();
-            resetPlayerPosition();
             gameRunning = true;
             gameLoop();
         }
@@ -627,42 +515,36 @@
         function gameOver() {
             gameRunning = false;
             document.getElementById('finalScore').textContent = score;
-            document.getElementById('finalDistance').textContent = score;
             document.getElementById('gameOverScreen').style.display = 'block';
         }
         
         function restartGame() {
-            // Reset game state
             score = 0;
             lives = 3;
             gameSpeed = 2;
             cars = [];
             
-            resetPlayerPosition();
+            player.x = canvas.width / 2 - player.width / 2;
+            player.y = canvas.height - 50;
             
             document.getElementById('scoreValue').textContent = score;
             document.getElementById('livesValue').textContent = lives;
             document.getElementById('gameOverScreen').style.display = 'none';
             
-            resizeCanvas();
-            createLanes();
             gameRunning = true;
             gameLoop();
         }
         
         // Initialize
-        createLanes();
-        drawBackground();
-        drawLanes();
-        drawPlayer();
-    </script>
-        }
+        window.addEventListener('load', function() {
+            resizeCanvas();
+            draw();
+        });
         
-        // Initialize
-        createLanes();
-        drawBackground();
-        drawLanes();
-        drawPlayer();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Prevent touch scrolling
+        document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
     </script>
 </body>
 </html>
